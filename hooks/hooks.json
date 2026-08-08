@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/study-reminder.sh",
+            "timeout": 10,
+            "statusMessage": "检查学习进度"
+          }
+        ]
+      }
+    ]
+  }
+}

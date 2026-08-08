@@ -1,0 +1,6 @@
+{
+  "name": "career",
+  "version": "1.0.0",
+  "description": "职业规划导师工具集：STAR 简历生成（/career:star）、入门资料推荐（/career:learn）、岗位 JD 能力分析（/career:jd）、学习打卡监督（/career:checkin）+ career-mentor 导师 agent + 学习进度提醒钩子",
+  "author": { "name": "chenyongzhi1119" }
+}
