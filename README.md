@@ -1,42 +1,63 @@
-# claude-career
+# claude-career（已归档，请改用 claude-skills）
 
-Claude Code 职业规划导师插件：把"项目写进简历、方向找资料、岗位差距分析、学习打卡监督"四件事装进你的终端。
+> **这个仓已停止维护，全部功能已并入 [chenyongzhi1119/claude-skills](https://github.com/chenyongzhi1119/claude-skills)。**
+> 那边是超集：除了这里的四个职业规划命令，还有日报周报、HTML 汇报胶片与讲稿、代码库走读教学、
+> 对抗性代码审查、技术选型与决策存档等共 19 个 skill、5 个 agent，外加同一个学习提醒钩子。
+>
+> 本仓保持只读，是为了不让已有的链接和 clone 失效。新用户请直接装 claude-skills。
 
-## 安装
+## 迁移方式
 
-在 Claude Code 会话里输入：
-
-```
-/plugin install https://github.com/chenyongzhi1119/claude-career.git
-```
-
-或在终端：
-
-```bash
-claude plugin install https://github.com/chenyongzhi1119/claude-career.git
-```
-
-## 功能
-
-| 命令 | 用途 |
-|---|---|
-| `/career:star [项目路径]` | 深入分析本地项目（源码、依赖、git 历史），生成 STAR 法则简历描述：简历版 bullet + 面试口述版 + 面试官追问预判。量化数据缺失会标注【请补充】，绝不编造 |
-| `/career:learn <方向>` | 联网检索该方向当前优质入门资料（不凭记忆推荐），按官方文档/课程/书籍/实战分类，附最小可行学习路径和验收标准 |
-| `/career:jd <岗位>` | 检索 3-5 份真实招聘 JD，归纳能力矩阵——把空泛的"熟悉/精通"翻译成可检验标准，并结合你的现状做差距分析 |
-| `/career:checkin` | 学习打卡：记录进度、对照计划给出带资料链接的下一步、落后时帮你把任务砍小、偶尔出验收题 |
-
-另含 `career-mentor` 子代理：自然语言提到简历、求职、学习路线时自动委派。
-
-## checkin 与提醒钩子的初始化
-
-打卡功能依赖进度文件 `~/Documents/career/学习进度.md`：
-
-1. 把 `templates/学习进度模板.md` 复制到 `~/Documents/career/学习进度.md`
-2. 填上你自己的阶段、计划表和资源地图（或直接让 Claude 帮你生成）
-3. 之后每次打开 Claude Code，SessionStart 钩子会按上次打卡日期提醒你（3 天提示、7 天警告）；文件不存在时钩子静默跳过
-
-## 卸载
+先卸载本插件：
 
 ```
 /plugin uninstall career
 ```
+
+再装 claude-skills：
+
+```
+/plugin marketplace add chenyongzhi1119/claude-skills
+/plugin install cn@claude-skills
+```
+
+想让命令不带前缀（`/cv` 而不是 `/cn:cv`），用脚本装：
+
+```bash
+git clone https://github.com/chenyongzhi1119/claude-skills.git
+cd claude-skills && ./install.sh
+```
+
+## 命令对照
+
+| 本仓旧命令 | claude-skills 新命令 | 说明 |
+|---|---|---|
+| `/career:star` | `/cv` | 内容一致，仅改名 |
+| `/career:learn` | `/roadmap` | 内容一致，仅改名 |
+| `/career:jd` | `/job` | 内容一致，仅改名 |
+| `/career:checkin` | `/checkin` | 同名，措辞更通用（不再绑定特定学习方向） |
+| `career-mentor` agent | `career-mentor` | 同名，无变化 |
+| `hooks/study-reminder.sh` | 同名 | 见新仓 README 的「学习提醒钩子（可选）」章节 |
+| `templates/学习进度模板.md` | 同名 | 同上 |
+
+## ⚠️ 数据文件路径变了
+
+新仓统一用 `~/Documents/study/`，本仓用的是 `~/Documents/career/`。已经在打卡的话，迁移前先把文件搬过去：
+
+```bash
+mkdir -p ~/Documents/study
+mv ~/Documents/career/学习进度.md ~/Documents/study/
+mv ~/Documents/career/作业本.md   ~/Documents/study/ 2>/dev/null
+```
+
+如果你不想搬，也可以装完之后直接编辑 `~/.claude/skills/checkin/SKILL.md`，把里面的路径改回 `~/Documents/career/`——skill 就是纯 Markdown 提示词，改完保存即生效。
+
+装了 SessionStart 钩子的话，别忘了 `~/.claude/hooks/study-reminder.sh` 里的路径也要跟着一致。
+
+## 为什么归并
+
+本仓的 `star` / `jd` / `learn` 与 claude-skills 的 `cv` / `job` / `roadmap` 是**逐字节相同**的文件，只有 frontmatter 里的 `name` 字段不一样。同一份提示词维护两处，改一边忘另一边，内容只会越来越分叉。收口到一个仓，各位少装一个插件，我少维护一份。
+
+## License
+
+MIT。
